@@ -1,0 +1,324 @@
+# GPU Burn CUDA Project .gitignore
+# This file contains patterns to exclude build artifacts, temporary files,
+# and IDE/OS-specific files from version control
+
+#==============================================================================
+# Build Directories and Output
+#==============================================================================
+# Primary build directory
+build/
+/build/
+
+# Alternative build directory names
+cmake-build-*/
+out/
+bin/
+lib/
+
+# Build artifacts anywhere in the tree
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.so.*
+*.dll
+*.dylib
+*.exe
+*.out
+*.app
+
+#==============================================================================
+# CMake Generated Files
+#==============================================================================
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps/
+*.cmake
+!CMakeLists.txt
+
+# CMake build directories
+CMakeScripts/
+Testing/
+Makefile
+cmake-build-debug/
+cmake-build-release/
+
+#==============================================================================
+# CUDA and NVIDIA Specific Files
+#==============================================================================
+# CUDA object files
+*.cubin
+*.fatbin
+*.ptx
+*.cuobj
+*.gpu
+*.device-link.o
+
+# NVIDIA Nsight files
+*.nvprof
+*.nvvp
+*.nsys-rep
+*.qdrep
+*.qdstrm
+*.sqlite
+
+# CUDA cache
+.cuda_cache/
+.nv/
+
+# GPU profiling outputs
+nvprof_*
+nsys_*
+
+#==============================================================================
+# C++ Intermediate Files
+#==============================================================================
+# Precompiled headers
+*.gch
+*.pch
+*.ipch
+
+# Dependencies
+*.d
+*.dep
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Profiling
+gmon.out
+*.gcda
+*.gcno
+*.gcov
+
+#==============================================================================
+# IDE and Editor Files
+#==============================================================================
+# Visual Studio Code
+.vscode/
+*.code-workspace
+.history/
+
+# CLion
+.idea/
+cmake-build-*/
+*.iws
+
+# Visual Studio
+.vs/
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Vim
+*.swp
+*.swo
+*~
+.*.swp
+.*.swo
+Session.vim
+.netrwhist
+tags
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Eclipse
+.project
+.cproject
+.settings/
+.metadata/
+
+# Qt Creator
+*.pro.user
+*.pro.user.*
+*.qbs.user
+*.qbs.user.*
+*.moc
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+ui_*.h
+*.qmlc
+*.jsc
+
+#==============================================================================
+# Operating System Files
+#==============================================================================
+# Linux
+.directory
+.Trash-*
+.nfs*
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+#==============================================================================
+# Language Server and Indexing
+#==============================================================================
+# clangd
+.clangd/
+.cache/
+compile_commands.json
+
+# ccls
+.ccls-cache/
+
+# ctags
+tags
+TAGS
+
+#==============================================================================
+# Testing and Coverage
+#==============================================================================
+# Test outputs
+test_results/
+test_output/
+*.test
+*.Test
+
+# Coverage reports
+coverage/
+*.coverage
+*.coveragexml
+coverage.info
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+
+# Google Test
+Testing/
+test_detail.xml
+
+#==============================================================================
+# Documentation
+#==============================================================================
+# Doxygen
+html/
+latex/
+docs/html/
+docs/latex/
+Doxyfile.bak
+
+# Sphinx
+docs/_build/
+docs/_static/
+docs/_templates/
+
+#==============================================================================
+# Package Management
+#==============================================================================
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+venv/
+env/
+ENV/
+
+# Node.js (if using any JS tooling)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+#==============================================================================
+# Logs and Temporary Files
+#==============================================================================
+*.log
+*.tmp
+*.temp
+*.bak
+*.backup
+*.old
+*.orig
+*.rej
+logs/
+temp/
+tmp/
+
+# Core dumps
+core
+core.*
+vgcore.*
+
+#==============================================================================
+# Project Specific
+#==============================================================================
+# GPU burn specific outputs
+gpu_burn_results/
+performance_logs/
+error_logs/
+validation_outputs/
+benchmark_results/
+
+# Generated configuration files (if any)
+config.local
+*.local.conf
+
+# Data files that shouldn't be tracked
+*.dat
+*.bin
+*.raw
