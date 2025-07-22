@@ -79,7 +79,6 @@ public:
         if (errors_.size() < 2) return 0.0;
         
         // Calculate correlation between temperature and error frequency
-        double sumTemp = 0.0, sumErrors = 0.0;
         std::vector<std::pair<double, int>> tempErrorCounts;
         
         // Group errors by temperature ranges
@@ -207,8 +206,7 @@ public:
         
         return result;
     }
-    
-    bool isSupported(int deviceId) const override {
+    bool isSupported(int /* deviceId */) const override {
         // Error monitoring is always supported
         return true;
     }

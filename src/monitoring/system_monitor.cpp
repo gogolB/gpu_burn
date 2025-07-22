@@ -67,7 +67,7 @@ public:
         return result;
     }
     
-    bool isSupported(int deviceId) const override {
+    bool isSupported(int /* deviceId */) const override {
         // System monitoring is always supported
         return true;
     }

@@ -232,6 +232,46 @@ private:
         }
     }
 };
+// CUDA kernel functions must be defined outside of class scope
+__global__ void computeSMChecksumsKernel(const float* data, float* sm_results,
+                                        size_t elements_per_sm, int num_sms) {
+    // Approximate SM ID (device-specific)
+    int sm_id = blockIdx.x % num_sms;
+    int local_tid = threadIdx.x;
+    int threads_per_block = blockDim.x;
+    
+    __shared__ float shared_sum[256];
+    shared_sum[local_tid] = 0.0f;
+    
+    // Each SM processes its portion of data
+    size_t start_idx = sm_id * elements_per_sm;
+    size_t end_idx = (start_idx + elements_per_sm < elements_per_sm * num_sms) ?
+                     start_idx + elements_per_sm : elements_per_sm * num_sms;
+    
+    // Compute checksum for this SM's data
+    float local_sum = 0.0f;
+    for (size_t i = start_idx + local_tid; i < end_idx; i += threads_per_block) {
+        float val = data[i];
+        // Simple checksum with position weighting
+        local_sum += val * (1.0f + float(i % 1000) * 0.001f);
+    }
+    
+    shared_sum[local_tid] = local_sum;
+    __syncthreads();
+    
+    // Reduction within block
+    for (int stride = threads_per_block / 2; stride > 0; stride /= 2) {
+        if (local_tid < stride) {
+            shared_sum[local_tid] += shared_sum[local_tid + stride];
+        }
+        __syncthreads();
+    }
+    
+    // Store result
+    if (local_tid == 0) {
+        sm_results[blockIdx.x] = shared_sum[0];
+    }
+}
 
 // Cross-SM Validator - Validates consistency across streaming multiprocessors
 class CrossSMValidator : public ValidationMethod {
@@ -309,46 +349,6 @@ public:
     }
     
 private:
-    static __global__ void computeSMChecksumsKernel(const float* data, float* sm_results,
-                                            size_t elements_per_sm, int num_sms) {
-        // Approximate SM ID (device-specific)
-        int sm_id = blockIdx.x % num_sms;
-        int local_tid = threadIdx.x;
-        int threads_per_block = blockDim.x;
-        
-        __shared__ float shared_sum[256];
-        shared_sum[local_tid] = 0.0f;
-        
-        // Each SM processes its portion of data
-        size_t start_idx = sm_id * elements_per_sm;
-        size_t end_idx = (start_idx + elements_per_sm < elements_per_sm * num_sms) ?
-                         start_idx + elements_per_sm : elements_per_sm * num_sms;
-        
-        // Compute checksum for this SM's data
-        float local_sum = 0.0f;
-        for (size_t i = start_idx + local_tid; i < end_idx; i += threads_per_block) {
-            float val = data[i];
-            // Simple checksum with position weighting
-            local_sum += val * (1.0f + float(i % 1000) * 0.001f);
-        }
-        
-        shared_sum[local_tid] = local_sum;
-        __syncthreads();
-        
-        // Reduction within block
-        for (int stride = threads_per_block / 2; stride > 0; stride /= 2) {
-            if (local_tid < stride) {
-                shared_sum[local_tid] += shared_sum[local_tid + stride];
-            }
-            __syncthreads();
-        }
-        
-        // Store result
-        if (local_tid == 0) {
-            sm_results[blockIdx.x] = shared_sum[0];
-        }
-    }
-    
     void computeSMChecksums(const float* data, size_t numElements, const KernelConfig& config) {
         size_t elements_per_sm = numElements / num_sms_;
         int blocks_per_sm = 4;

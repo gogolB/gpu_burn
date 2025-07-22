@@ -412,7 +412,7 @@ bool MonitoringEngine::shouldCollect(MetricsCollector* collector,
     return false;
 }
 
-void MonitoringEngine::processCollectorResult(MetricsCollector* collector, const MetricResult& result) {
+void MonitoringEngine::processCollectorResult(MetricsCollector* /* collector */, const MetricResult& result) {
     {
         std::lock_guard<std::mutex> lock(statsMutex_);
         stats_.totalSamplesCollected++;
@@ -450,7 +450,7 @@ void MonitoringEngine::checkThresholds(MetricType type, const MetricResult& resu
     }
 }
 
-void MonitoringEngine::checkAlert(const Alert& alert, const MetricResult& result) {
+void MonitoringEngine::checkAlert(const Alert& alert, const MetricResult& /* result */) {
     auto value = dataStore_->getLatestValue(alert.metricName);
     
     if (alert.condition && alert.condition(value)) {
@@ -482,10 +482,14 @@ void MonitoringEngine::setThreadPriority(ThreadPriority priority) {
         case ThreadPriority::HIGH:
             policy = SCHED_OTHER;
             // Use nice value instead
-            nice(-5);
+            if (nice(-5) == -1) {
+                // nice() can fail, but we'll continue anyway
+            }
             break;
         case ThreadPriority::LOW:
-            nice(5);
+            if (nice(5) == -1) {
+                // nice() can fail, but we'll continue anyway
+            }
             break;
         default:
             break;

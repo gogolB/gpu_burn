@@ -116,7 +116,7 @@ void MonitoringIntegration::updateValidationMetrics(const ValidationResult& resu
     dataStore->insert("validation.overhead_ms", result.validationTimeMs);
 }
 
-void MonitoringIntegration::generateReport(const std::string& testName) {
+void MonitoringIntegration::generateReport(const std::string& /* testName */) {
     if (!engine_) return;
     
     // Use the engine's report generation functionality
@@ -147,8 +147,8 @@ void MonitoringIntegration::integrateWithValidation(ValidationEngine* validation
 void MonitoringIntegration::setupDefaultCallbacks() {
     // Default kernel start callback
     if (!callbacks_.onKernelStart) {
-        callbacks_.onKernelStart = [this](const std::string& kernelName, 
-                                         const KernelConfig& config) {
+        callbacks_.onKernelStart = [this](const std::string& kernelName,
+                                         const KernelConfig& /* config */) {
             if (config_.enableConsoleOutput) {
                 std::cout << "[MONITOR] Starting kernel: " << kernelName << "\n";
             }
